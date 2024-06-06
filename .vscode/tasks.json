@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build with Make",
+            "type": "shell",
+            "command": "make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Generated task for building with make"
+        },
+        {
+            "label": "Clean with Make",
+            "type": "shell",
+            "command": "make clean",
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Generated task for cleaning with make"
+        }
+    ]
+}
