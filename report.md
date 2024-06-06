@@ -42,7 +42,7 @@ int main()
     ifft(data);
     write("output_ifft.txt", data);
 }
-
+```
 3. Убедиться в корректности работы алгоритмов:
 а) проверить выполнение равенства $X= ОДПФ(ДПФ(Х))$, а также равенства
 $X=ОБПФ(БПФ(Х))$;
@@ -70,12 +70,18 @@ int main() {
     cout<<"\nC)"<<endl;
     return 0;
 }
-
+```
 A)
 Ошибка ДПФ = 1.9779e-13
 B)
 Ошибка БПФ = 3.65341e-29
 
+```Python
+x=read("complex.txt")
+y_fft=sc.fft.fft(x,norm="ortho")
+y_mine=read("output_fft.txt")
+print ('Ошибка моя и не моя = ', sqerror(y_fft,y_mine))
+```
 $Ошибка моя и не моя =  1.9680606904870108e-11$
 
 4. Проанализировать зависимость времени выполнения БПФ и непосредственного
@@ -108,7 +114,23 @@ int main() {
     write("time_fft.txt",time_fft);
     return 0;
 }
+```
 
+```Python
+time_dft=read("time_dft.txt")
+time_fft=read("time_fft.txt")
+time_d,time_f,k=[],[],[]
+for i in range(len(time_dft)):
+  time_d.append(time_dft[i].imag)
+  time_f.append(time_fft[i].imag)
+  k.append(2**i)
+plt.loglog(k,time_d,label="dft")
+plt.loglog(k,time_f,label="fft")
+plt.legend()
+plt.xlabel("N")
+plt.ylabel("t,nanosec")
+plt.grid()
+```
 
 ![image](https://github.com/a1nvan/DSP_2/assets/143883568/d11acc89-c11c-4740-a4b5-843088d92dc9)
 
@@ -124,7 +146,7 @@ int main()
     vector<Complex> result = directConvolution(data1,data2);
     write("directConv.txt",result);
 }
-
+```
 
 6. Реализовать процедуру нахождения дискретной свертки, основанную на БПФ.
 При вычислении БПФ использовать результаты п. 2 задания.
@@ -137,12 +159,23 @@ int main()
     vector<Complex> result = Convolvefft(data1,data2);
     write("Convolvfft.txt",result);
 }
-
+```
 
 7. Убедится в корректности работы процедуры из п. 5 и п. 6 задания, сравнив
 полученные результаты с результатами работы встроенной функций MATLAB
 conv.
 (рекомендуется для сравнения использовать значение ошибки)
+
+```Python
+directConv =read("directConv.txt")
+Convolvfft=read("Convolvfft.txt")
+data1=read("complex2.txt")
+data2=read("complex3.txt")
+conv_py=np.convolve(data1,data2)
+print("Ошибка между прямой свертки и свертки с БПФ = ", sqerror(directConv,Convolvfft))
+print("Ошибка между питоновскорй свертки и прямой свертки = ", sqerror(conv_py,Convolvfft))
+print("Ошибка между питоновской свертки и свертки с БПФ = ", sqerror(conv_py,Convolvfft))
+```
 
 $Ошибка между прямой свертки и свертки с БПФ =  1.3306385211402124e-11$
 $Ошибка между питоновскорй свертки и прямой свертки =  1.3306385523421496e-11$
@@ -202,7 +235,38 @@ int main() {
 
     return 0;
 }
+```
 
+```Python
+time_conv1=read("time_direct_fixed.txt")
+time_conv2=read("time_direct_variable.txt")
+time_fconv1=read("time_fft_fixed.txt")
+time_fconv2=read("time_fft_variable.txt")
+time1,time2,time3,time4,num=[],[],[],[],[]
+for i in range(len(time_conv1)):
+    time1.append(time_conv1[i].imag)
+    time2.append(time_conv2[i].imag)
+    time3.append(time_fconv1[i].imag)
+    time4.append(time_fconv2[i].imag)
+    num.append(2**i)
+
+plt.loglog(num,time1, label="dft")
+plt.loglog(num,time3, label="fft")
+plt.legend()
+plt.xlabel("N")
+plt.ylabel("t, ns")
+plt.title("Фиксированный размер у одного из векторов")
+plt.grid()
+
+plt.figure()
+plt.loglog(num,time2, label="dft")
+plt.loglog(num,time4, label="fft")
+plt.legend()
+plt.xlabel("N")
+plt.ylabel("t, ns")
+plt.title("Размер меняется у обоих векторов")
+plt.grid()
+```
 ![image](https://github.com/a1nvan/DSP_2/assets/143883568/77a5ba5c-51ec-4bdb-94cc-e691757f889c)
 ![image](https://github.com/a1nvan/DSP_2/assets/143883568/411d3ff8-e8f4-4ab9-b268-8ff417605c00)
 
